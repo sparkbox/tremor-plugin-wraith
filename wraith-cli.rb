@@ -14,13 +14,15 @@ class Wraithify < Thor
           :oauth_token => :string,
           :s3_key_id => :string,
           :s3_secret_key => :string
+          :github_status => :boolean
 
   def check
     puts "Starting Wraith..."
     gh = GithubWraith.new(options[:repo_name], options[:pr_number], options[:login], options[:oauth_token])
+    slack = SlackWraith.new(options[:slack_token], options[:slack_channel])
 
     # Set the state of the P
-    gh.send_msg "pending", "Checking for visual differences", options[:variant_url]
+    gh.send_msg("pending", "Checking for visual differences", options[:variant_url], options[:github_status])
 
     gh.writeConfig(options[:repo_name], options[:variant_url])
 
@@ -28,7 +30,10 @@ class Wraithify < Thor
 
     if wraith_result
       # Set the state of the PR
-      gh.send_msg "success", "No significant visual differences", options[:variant_url]
+      gh.send_msg("success", "No significant visual differences", options[:variant_url], options[:github_status])
+
+      # Notify Slack
+      slack.send_msg("No significant visual differences found in #{options[:variant_url]}")
     else
       results = {}
 
@@ -41,12 +46,10 @@ class Wraithify < Thor
       results[:variation_url] = "#{options[:variant_url]}"
 
       # Notify Slack
-      SlackWraith
-        .new(options[:slack_token], options[:slack_channel])
-        .send_msg(results)
+      slack.send_msg(results)
 
       # Set the state of the PR
-      gh.send_msg "failure", "Significant visual differences found!", options[:variant_url]
+      gh.send_msg("failure", "Significant visual differences found!", options[:variant_url], options[:github_status])
     end
   end
 end
