@@ -1,0 +1,20 @@
+---
+  browser:
+    phantomjs: "phantomjs"
+  domains:
+    baseline: "https://blog.robtarr.net"
+    variant: "https://robtarr.net"
+  snap_file: "wraith/wraith.js"
+  directory: "wraith/shots"
+  screen_widths:
+    - "300x480"
+  paths:
+    "post_1": "/https-all-the-things/"
+    "post_2": "/simplify-your-atom-config/"
+  fuzz: "20%"
+  spider_days:
+    - 10
+  mode: "diffs_first"
+  threshold: 10
+  gallery:
+    template: "tremor.html.erb"

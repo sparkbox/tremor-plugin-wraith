@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+  <header>
+    <h1>Tremors taken <%= Time.now.strftime('%Y/%m/%d %H:%M:%S') %></h1>
+    <nav>
+      <div>
+        <h2>Pages:</h2>
+        <% directories.keys.each do |dir| %>
+          <label>
+            <input type="checkbox" name="<%=path%><%=dir%>">
+            <a href="#<%=path%><%=dir%>"><%=dir.gsub('__', '/')%></a></li>
+            <span><%=path%><%=dir%> (<%=dir.gsub('__', '/')%>)</span>
+          </label>
+        <% end %>
+      </div>
+      <div>
+        <h2>Sizes:</h2>
+        <label>
+          <input type="checkbox">
+          <span>300x480</span>
+        </label>
+        <label>
+          <input type="checkbox">
+          <span>480x768</span>
+        </label>
+      </div>
+      <div>
+        <h2>Filter:</h2>
+        <input type="text"></input>
+      </div>
+    </nav>
+    <p class="notifications">
+      No significant Regressions
+    </p>
+  </header>
+
+  <section>
+    <ul>
+      <% directories.each do |dir, sizes| %>
+        <% sizes.to_a.sort.each do |size, files| %>
+          <li>
+            <h3><%= dir.gsub('__', '/') %></h3>
+            <h4>Screen Size: <%=size%></h4>
+            <ol>
+              <% if files[:diff] %>
+                <li>
+                  <a href="<%=files[:diff][:filename]%>">
+                    <img src="<%=files[:diff][:thumb]%>">
+                  <p>100% diff<p>
+                </li>
+                <% end %>
+                <% if threshold.nil? %>
+                  <p><%=files[:data]%> % different</p>
+                <% elsif files[:data] > threshold %>
+                  <p><%=files[:data]%> % different (significant)</p>
+                <% else %>
+                  <p><%=files[:data]%> % different</p>
+                <% end %>
+              <% files[:variants].each do |file| %>
+                <li>
+                  <a href="<%=file[:filename]%>">
+                    <img src="<%=path%><%=file[:thumb]%>">
+                  </a>
+                  <a href="<%=file[:url]%>"><%=file[:name]%></a>
+                </li>
+              <% end %>
+            </ol>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  </section>
+</body>
+</html>
