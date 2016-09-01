@@ -1,29 +1,35 @@
-![sparkbox-wraith](http://i.imgur.com/DUomwIl.jpg)
+![tremor-plugin-wraith](http://i.imgur.com/DUomwIl.jpg)
 
-sparkbox-wraith is a tool that glues together a few excellent services to provide notifications when builds have significant visual differences.
-sparkbox-wraith wouldn't be possible without:
+tremor-plugin-wraith is a plugin to [sparkbox/tremor]. It leverages
+[BBC-News Wraith], recording results back to Tremor.
 
-  - [BBC-News Wraith](https://github.com/BBC-News/wraith) project
-  - [Slack](http://slackhq.com)
-  - [CircleCI](http://circleci.com)
-  - [Divshot](https://divshot.com/).
+## Development
 
-## Set up
+Install the [Docker Platform] to run this image locally.
 
-There's quite a bit of setup to get sparkbox-wraith ready to go.
+While developing this image, we have found the following convenient:
 
-1. Create a [Slack bot](https://api.slack.com/bot-users)
-2. Add that bot token to `config.json`. Use `config-sample.json` as a template.
-3. Add the channel name to `config.json`.
-4. "Invite" the bot to the channel. Typing `@INSERT_BOT_NAME_HERE` in the channel will send an invite.
-5. Create a new divshot app to host the wraith diff web page, with `divshot init`.
-6. Fill out the url of the divshot app in `config.json`
-7. Create a divshot token and add it to CircleCI to allow Circle to push to divshot after running wraith.
+2. Build the Docker image using [Docker Platform]:
+  ```
+  docker build -t sparkbox/tremor-plugin-wraith:local .
+  ```
 
-## Docker
+3. Run the Docker image while [mounting] the project directory:
+  ```
+  docker run -ti sparkbox/tremor-plugin-wraith:local \
+    -v ".:/wraith" \
+    /bin/bash
+  ```
 
-Sparkbox Wraith can be run as a Docker container via `docker run
-sparkbox/wraith`.
+You will now be in a Bash shell within a running container. Changes made to
+this repo on your local file system will be reflected within the running
+container, because you have mounted the current repo directory into the
+container's [WORKDIR]
 
-To build the Docker image run `docker build -t sparkbox/wraith .`.  This will
-build your image. Then you can run it by name.
+
+[BBC-News Wraith]: https://github.com/BBC-News/wraith
+[mounting]: https://docs.docker.com/engine/tutorials/dockervolumes/#/mount-a-host-directory-as-a-data-volume
+[WORKDIR]: https://docs.docker.com/engine/reference/builder/#workdir
+[sparkbox/tremor]: https://github.com/sparkbox/tremor
+[Docker Platform]: https://www.docker.com/products/overview
+
