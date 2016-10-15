@@ -5,20 +5,18 @@ tremor-plugin-wraith is a plugin to [sparkbox/tremor]. It leverages
 
 ## Development
 
-Install the [Docker Platform] to run this image locally.
-
-While developing this image, we have found the following convenient:
+1. Install the [Docker Platform] to run this image locally.
 
 2. Build the Docker image using [Docker Platform]:
+
   ```
   docker build -t sparkbox/tremor-plugin-wraith:local .
   ```
 
 3. Run the Docker image while [mounting] the project directory:
+
   ```
-  docker run -ti sparkbox/tremor-plugin-wraith:local \
-    -v ".:/wraith" \
-    /bin/bash
+  docker run -ti sparkbox/tremor-plugin-wraith:local /bin/bash
   ```
 
 You will now be in a Bash shell within a running container. Changes made to
