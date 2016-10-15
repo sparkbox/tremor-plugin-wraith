@@ -9,6 +9,8 @@ class SlackWraith
   end
 
   def send_msg(results)
+    return if @token.blank?
+
     puts "Sending to slack #{results}"
 
     gallery_url = results[:gallery_url]
